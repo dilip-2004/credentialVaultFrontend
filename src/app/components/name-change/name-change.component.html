@@ -1,0 +1,25 @@
+<div class="name-change-container">
+  <h2>Change Display Name</h2>
+
+  <form [formGroup]="nameForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">New Name</label>
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        [class.invalid]="nameForm.get('name')?.invalid && nameForm.get('name')?.touched"
+      />
+      <div class="error" *ngIf="nameForm.get('name')?.touched && nameForm.get('name')?.invalid">
+        Name is required and must be at least 2 characters.
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="isSubmitting || nameForm.invalid">
+      {{ isSubmitting ? 'Updating...' : 'Update Name' }}
+    </button>
+  </form>
+
+  <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+</div>

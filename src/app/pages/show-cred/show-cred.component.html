@@ -1,0 +1,167 @@
+<div class="min-h-screen bg-gray-50 py-6">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">View Credential</h1>
+          <p class="text-gray-600 mt-1">Secure credential details</p>
+        </div>
+        <button 
+          [routerLink]="['/home']"
+          class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+        >
+          ⬅️ Back to Vault
+        </button>
+      </div>
+    </div>
+
+    <!-- Credential Details -->
+    <div *ngIf="credential; else errorBlock" class="bg-white rounded-xl shadow-md p-8">
+      <div class="space-y-6">
+        <!-- App Name -->
+        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+          <div class="flex items-center">
+            <div class="bg-blue-100 p-3 rounded-full mr-4">
+              <span class="text-2xl">📱</span>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-gray-900">{{ credential.appName }}</h2>
+              <p class="text-gray-600 text-sm">Application/Website</p>
+            </div>
+          </div>
+          <button 
+            [routerLink]="['/update-credential', credential.id]"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+          >
+            Edit
+          </button>
+        </div>
+
+        <!-- Username/Email -->
+        <div class="border border-gray-200 rounded-lg p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div>
+                <p class="text-sm font-medium text-gray-700">Username/Email</p>
+                <p class="text-lg font-semibold text-gray-900">{{ credential.appUserName }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="border border-gray-200 rounded-lg p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div>
+                <p class="text-sm font-medium text-gray-700">Password</p>
+                <div class="flex items-center space-x-2">
+                  <p class="text-lg font-mono text-gray-900">
+                    <span *ngIf="!decryptedPassword">{{ credential.maskedPassword }}</span>
+                    <span *ngIf="decryptedPassword">{{ decryptedPassword }}</span>
+                  </p>
+                  <button 
+                    *ngIf="!decryptedPassword"
+                    (click)="showForm = !showForm"
+                    class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                  >
+                    {{ showForm ? 'Cancel' : ' Decrypt' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Password Decrypt Form -->
+        <div *ngIf="showForm" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <h3 class="text-lg font-semibold text-yellow-800 mb-4"> Decrypt Password</h3>
+          <form [formGroup]="passwordForm" (ngSubmit)="onDecrypt()" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Enter your account password:</label>
+              <input 
+                type="password" 
+                formControlName="userPassword" 
+                placeholder="Your account password"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <div class="text-red-500 text-sm mt-1">
+                <small *ngIf="f['userPassword'].touched && f['userPassword'].errors?.['required']">Password is required</small>
+                <small *ngIf="f['userPassword'].touched && f['userPassword'].errors?.['minlength']">Minimum 8 characters</small>
+              </div>
+            </div>
+            <!-- Error Message -->
+            <div *ngIf="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center">
+              {{ error }}
+            </div>
+            <div class="flex gap-2">
+              <button 
+                type="submit" 
+                [disabled]="loading"
+                class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 disabled:opacity-50"
+              >
+                {{ loading ? 'Decrypting...' : ' Decrypt' }}
+              </button>
+              <button 
+                type="button" 
+                (click)="showForm = false"
+                class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- App Link -->
+        <div *ngIf="credential.appLink" class="border border-gray-200 rounded-lg p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <span class="text-gray-600 mr-3"></span>
+              <div>
+                <p class="text-sm font-medium text-gray-700">Website URL</p>
+                <a [href]="credential.appLink" target="_blank" class="text-blue-600 hover:text-blue-800 underline text-lg break-all">
+                  {{ credential.appLink }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metadata -->
+        <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex items-center">
+              <div>
+                <p class="text-sm font-medium text-gray-700">Created</p>
+                <p class="text-gray-900">{{ credential.createdAt | date:'medium' }}</p>
+              </div>
+            </div>
+            <div class="flex items-center">
+              <div>
+                <p class="text-sm font-medium text-gray-700">Last Updated</p>
+                <p class="text-gray-900">{{ credential.updatedAt | date:'medium' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <ng-template #errorBlock>
+      <div class="bg-white rounded-xl shadow-md p-12 text-center">
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Credential not found</h3>
+        <p class="text-gray-600 mb-6">{{ error || 'The credential you\'re looking for doesn\'t exist or has been deleted.' }}</p>
+        <button 
+          [routerLink]="['/vault']"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200"
+        >
+          Back to Vault
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</div>
+

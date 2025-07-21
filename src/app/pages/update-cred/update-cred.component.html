@@ -1,0 +1,109 @@
+<div class="update-cred-container">
+  <div class="update-cred-header">
+    <h1>Update Credential</h1>
+    <button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+  </div>
+  
+  <div class="update-cred-content" *ngIf="!isLoading">
+    <form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="appName">Application Name</label>
+        <input 
+          id="appName" 
+          type="text" 
+          class="form-control" 
+          formControlName="appName"
+          placeholder="Enter application name"
+          [class.error]="f['appName'].invalid && f['appName'].touched"
+        >
+        <div class="error-message" *ngIf="f['appName'].invalid && f['appName'].touched">
+          <small *ngIf="f['appName'].errors?.['required']">Application name is required</small>
+          <small *ngIf="f['appName'].errors?.['maxlength']">Application name cannot exceed 100 characters</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="appUserName">Username</label>
+        <input 
+          id="appUserName" 
+          type="text" 
+          class="form-control" 
+          formControlName="appUserName"
+          placeholder="Enter username"
+          [class.error]="f['appUserName'].invalid && f['appUserName'].touched"
+        >
+        <div class="error-message" *ngIf="f['appUserName'].invalid && f['appUserName'].touched">
+          <small *ngIf="f['appUserName'].errors?.['required']">Username is required</small>
+          <small *ngIf="f['appUserName'].errors?.['maxlength']">Username cannot exceed 100 characters</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="appPassword">Password</label>
+        <input 
+          id="appPassword" 
+          type="password" 
+          class="form-control" 
+          formControlName="appPassword"
+          placeholder="Enter new password"
+          [class.error]="f['appPassword'].invalid && f['appPassword'].touched"
+        >
+        <div class="error-message" *ngIf="f['appPassword'].invalid && f['appPassword'].touched">
+          <small *ngIf="f['appPassword'].errors?.['required']">Password is required</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="appLink">Application Link (Optional)</label>
+        <input 
+          id="appLink" 
+          type="url" 
+          class="form-control" 
+          formControlName="appLink"
+          placeholder="Enter application URL (optional)"
+          [class.error]="f['appLink'].invalid && f['appLink'].touched"
+        >
+        <div class="error-message" *ngIf="f['appLink'].invalid && f['appLink'].touched">
+          <small *ngIf="f['appLink'].errors?.['maxlength']">Link cannot exceed 2048 characters</small>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-alert" *ngIf="error">
+        <div class="error-icon">⚠</div>
+        <p>{{ error }}</p>
+      </div>
+
+      <!-- Success Message -->
+      <div class="success-alert" *ngIf="message">
+        <div class="success-icon">✓</div>
+        <p>{{ message }}</p>
+      </div>
+
+      <div class="form-actions">
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          [disabled]="isLoading || updateForm.invalid"
+        >
+          <span *ngIf="isLoading" class="spinner"></span>
+          {{ isLoading ? 'Updating...' : 'Update Credential' }}
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="onCancel()"
+          [disabled]="isLoading"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+  
+  <div class="loading-state" *ngIf="isLoading && !credential">
+    <div class="spinner"></div>
+    <p>Loading credential...</p>
+  </div>
+</div>
+

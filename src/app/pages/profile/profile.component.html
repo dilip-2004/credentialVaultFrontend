@@ -1,0 +1,47 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <h1>User Profile</h1>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </div>
+  
+  <div class="profile-content" *ngIf="user">
+    <div class="profile-card">
+      <div class="profile-info">
+        <div class="info-item">
+          <label>Name:</label>
+          <span>{{ user.name }}</span>
+        </div>
+        
+        <div class="info-item">
+          <label>Email:</label>
+          <span>{{ user.email }}</span>
+        </div>
+        
+        <div class="info-item">
+          <label>Role:</label>
+          <span class="role-badge" [class.admin]="user.role === 'Admin'">{{ user.role }}</span>
+        </div>
+        
+        <div class="info-item">
+          <label>Member Since:</label>
+          <span>{{ user.createdAt | date:'longDate' }}</span>
+        </div>
+        
+        <div class="info-item">
+          <label>Last Updated:</label>
+          <span>{{ user.updatedAt | date:'medium' }}</span>
+        </div>
+      </div>
+      
+      <div class="profile-actions">
+        <a [routerLink]="['/name-change']" routerLinkActive="router-link-active"  class="btn btn-primary">Change Name</a>
+        <a [routerLink]="['/password-change']" routerLinkActive="router-link-active"  class="btn btn-secondary">Change Password</a>
+        <a routerLink="/home" class="btn btn-outline">Back to Home</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="loading-state" *ngIf="!user">
+    <p>Loading profile...</p>
+  </div>
+</div>
