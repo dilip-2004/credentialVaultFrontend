@@ -2,37 +2,49 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, CanActivateFn } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 export const authGuard: CanActivateFn = ( route: ActivatedRouteSnapshot, state: RouterStateSnapshot)=> {
-  const authService = inject(AuthService);
+const authService = inject(AuthService);
   const router = inject(Router);
 
+  const targetRoute = state.url;
+  
+  const redirectBasedOnRole = (role: string | null) => {
+    if (role === 'Admin') {
+      if (!targetRoute.startsWith('/admin')) {
+        router.navigate(['/admin']);
+        return false;
+      }
+      return true;
+    }
+
+    if (role === 'User') {
+      if (targetRoute.startsWith('/admin')) {
+        router.navigate(['/home']);
+        return false;
+      }
+      return true;
+    }
+
+    router.navigate(['/auth/login']);
+    return false;
+  };
+
   if (authService.isAuthenticated()) {
-    return handleRole(authService.getUserRole(), router);
+    const role = authService.getUserRole();
+    return of(redirectBasedOnRole(role));
   }
 
   return authService.refreshToken().pipe(
     map(response => {
       authService.setAccessToken(response.accessToken);
       authService.setUser(response.user);
-      return response.user.role;
+      return redirectBasedOnRole(response.user.role);
     }),
-    switchMap(role => handleRole(role, router)),
     catchError(() => {
       router.navigate(['/auth/login']);
       return of(false);
     })
   );
 };
-
-function handleRole(role: string | null, router: Router) {
-  if (role === 'User') return of(true);
-  if (role === 'Admin') {
-    router.navigate(['/admin']);
-    return of(false);
-  }
-
-  router.navigate(['/auth/login']);
-  return of(false);
-}

@@ -1,13 +1,15 @@
 <div *ngIf="isLoading">Loading user details...</div>
 
 <div *ngIf="!isLoading && user">
-  <h2>{{ user.name }}{{ yourId===user._id ? 'me' : '' }} <span class="badge">{{ user.role }}</span></h2>
+  <h2>
+    {{ user.name }}
+    <span *ngIf="yourId === user._id" class="ml-2 inline-block px-2 py-0.5 text-xs bg-teal-100 text-teal-800 rounded-full">Me</span>
+    <span class="badge">{{ user.role }}</span>
+  </h2>
 
   <p><strong>Email:</strong> {{ user.email }}</p>
   <p><strong>Role:</strong> {{ user.role }}</p>
   <p><strong>Created At:</strong> {{ user.createdAt | date:'medium' }}</p>
   <p><strong>Updated At:</strong> {{ user.updatedAt | date:'medium' }}</p>
-  @if(user.role === 'User') {
-    <p><strong>Total Credentials:</strong> {{ credentialCount }}</p>
-  }
+  <p *ngIf="user.role === 'User'"><strong>Total Credentials:</strong> {{ credentialCount }}</p>
 </div>

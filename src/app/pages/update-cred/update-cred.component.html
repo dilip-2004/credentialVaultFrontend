@@ -27,7 +27,7 @@
         <input 
           id="appUserName" 
           type="text" 
-          class="form-control" 
+          class="form-control"
           formControlName="appUserName"
           placeholder="Enter username"
           [class.error]="f['appUserName'].invalid && f['appUserName'].touched"
@@ -70,7 +70,6 @@
 
       <!-- Error Message -->
       <div class="error-alert" *ngIf="error">
-        <div class="error-icon">⚠</div>
         <p>{{ error }}</p>
       </div>
 

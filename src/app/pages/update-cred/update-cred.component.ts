@@ -75,12 +75,13 @@ export class UpdateCredComponent implements OnInit {
 
     this.credentialsService.updateCredentials(this.credentialId, updateData).subscribe({
       next: (response) => {
+        console.log(response);
         this.message = response.message || 'Credential updated successfully!';
         this.isLoading = false;
         
         // Redirect to credentials list after successful update
         setTimeout(() => {
-          this.router.navigate(['/credentials']);
+          this.router.navigate(['/home']);
         }, 2000);
       },
       error: (err: HttpErrorResponse) => {
@@ -91,7 +92,7 @@ export class UpdateCredComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/credentials']);
+    this.router.navigate(['/home']);
   }
 
   get f() {

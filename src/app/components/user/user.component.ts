@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AdminService } from '../../services/admin.service';
-import { GetUserByIdResponse, User } from '../../interfaces/admin';
+import { User } from '../../interfaces/admin';
 import { CommonModule, DatePipe } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 

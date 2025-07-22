@@ -17,6 +17,9 @@ import { UpdateCredComponent } from './pages/update-cred/update-cred.component';
 import { AdminHomeComponent } from './pages/admin-home/admin-home.component';
 
 import { ErrorComponent } from './common/error/error.component';
+import { UsersTableComponent } from './components/users-table/users-table.component';
+import { UserComponent } from './components/user/user.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 export const routes: Routes = [
   // Default redirect
@@ -42,6 +45,7 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [authGuard],
+    data: { expectedRole: 'User' },
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'profile', component: ProfileComponent },
@@ -56,12 +60,13 @@ export const routes: Routes = [
   // Admin Routes (accessible only to admin users)
   {
     path: 'admin',
+    component: AdminHomeComponent,
     canActivate: [authGuard, roleGuard],
     data: { expectedRole: 'Admin' },
     children: [
-      { path: 'dashboard', component: AdminHomeComponent },
-      { path: 'users', component: AdminHomeComponent },
-      { path: 'user/:id', component: AdminHomeComponent },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'usersTable', component: UsersTableComponent },
+      { path: 'user/:id', component: UserComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

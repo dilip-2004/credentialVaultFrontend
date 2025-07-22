@@ -5,11 +5,10 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-users-table',
-  imports: [DatePipe,CommonModule,FormsModule,RouterLink, LucideAngularModule],
+  imports: [DatePipe,CommonModule,FormsModule,RouterLink],
   templateUrl: './users-table.component.html',
   styleUrl: './users-table.component.css'
 })

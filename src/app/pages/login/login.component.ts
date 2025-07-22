@@ -46,12 +46,14 @@ export class LoginComponent {
         this.loading = false;
         
         if (response.user.role === 'Admin') {
-          this.router.navigate(['/admin/dashboard']);
+          console.log(response.user.role);
+          this.router.navigate(['/admin']);
         } else {
           this.router.navigate(['/home']);
         }
       },
       error: (err: HttpErrorResponse) => {
+        console.log(err);
         this.error = err.error?.message || 'Login failed. Please try again.';
         this.loading = false;
       }
